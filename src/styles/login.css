@@ -1,0 +1,68 @@
+/* App.css */
+@import url('https://fonts.googleapis.com/css2?family=Aldrich&family=Funnel+Display:wght@300..800&display=swap');
+body {
+    background: linear-gradient(to right, #4352c8, #732f3a);
+    height: 100vh;
+    margin: 0;
+    flex-direction: column;
+    display: flex;
+    color: white;
+    font-family: "Aldrich", serif;
+    text-align: center;
+  }
+
+ .text{
+    display: flex;
+    flex-direction: column;
+    top: 0px;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    top: -30px;
+ }
+ h1 {
+    color: #11193e; 
+    background-image: linear-gradient(45deg, #11193e 26%, #2a347a 60%, #d05d70 48%); 
+    background-clip: text; 
+    -webkit-background-clip: text; 
+    -webkit-text-fill-color: transparent; 
+    align-items: center;
+    font-weight: bolder;
+    font-size: 35px;
+   }
+
+   .button-54 {
+     font-family: "Open Sans", sans-serif;
+     font-size: 16px;
+     letter-spacing: 2px;
+     text-decoration: none;
+     text-transform: uppercase;
+     color: #000;
+     cursor: pointer;
+     border: 3px solid;
+     padding: 0.25em 0.5em;
+     box-shadow: 1px 1px 0px 0px, 2px 2px 0px 0px, 3px 3px 0px 0px, 4px 4px 0px 0px, 5px 5px 0px 0px;
+     position: relative;
+     user-select: none;
+     -webkit-user-select: none;
+     touch-action: manipulation;
+   }
+   
+   .button-54:active {
+     box-shadow: 0px 0px 0px 0px;
+     top: 5px;
+     left: 5px;
+   }
+   
+   @media (min-width: 768px) {
+     .button-54 {
+       padding: 0.25em 0.75em;
+     }
+   }
+
+   img{
+    width: 150px;
+    margin: 0;
+  height: 150px;
+  object-fit: cover;
+   }
