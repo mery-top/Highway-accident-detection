@@ -6,7 +6,7 @@ app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_origins = ["http://localhost:3000"],
-    allows_credentials=True,
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -16,10 +16,14 @@ def read_root():
     return {"message": "Hello, FastAPI!"}
 
 
-@app.get("/api/data")
+@app.get("/login")
 def get_data():
     return{"data is from Fast API"}
 
+
+@app.get("/home")
+def home():
+    return {"This is Home"}
 
 if __name__ == "__main__":
     import uvicorn
