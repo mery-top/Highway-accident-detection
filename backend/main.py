@@ -4,8 +4,15 @@ from fastapi.security import OAuth2PasswordBearer
 from pydantic import BaseModel
 from fastapi_jwt_auth import AuthJWT
 import bcrypt
+import os
+from dotenv import load_dotenv
+
+
+load_dotenv()
 
 app = FastAPI()
+
+
 
 app.add_middleware(
     CORSMiddleware,
@@ -24,7 +31,7 @@ def get_config():
 
 # Hardcoding a bcrypt hash for testing purposes
 # This is the hash of the password "hello"
-STORED_PASSWORD_HASH = "$2b$12$tuhDZw1WFSk6Zd1CWAu9B.CKtJv4gGeEZP1YQPHuFY1VeZNnNHYXC"
+STORED_PASSWORD_HASH = os.getenv("HASH_VALUE")
 class LoginRequest(BaseModel):
     password: str
 
