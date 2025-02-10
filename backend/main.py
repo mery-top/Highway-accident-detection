@@ -23,7 +23,7 @@ app.add_middleware(
 )
 
 class Settings(BaseModel):
-    authjwt_secret_key: str = "your_secret_key"  
+    authjwt_secret_key: str = os.getenv("JWT_KEY")
 
 @AuthJWT.load_config
 def get_config():
