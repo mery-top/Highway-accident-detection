@@ -1,7 +1,7 @@
 /* App.css */
 @import url('https://fonts.googleapis.com/css2?family=Aldrich&family=Funnel+Display:wght@300..800&display=swap');
 body {
-    background: linear-gradient(to right, #4352c8, #732f3a);
+    background: linear-gradient(to right, #505ecd, #732f3a);
     height: 100vh;
     margin: 0;
     flex-direction: column;
