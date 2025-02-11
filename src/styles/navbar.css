@@ -1,0 +1,62 @@
+.navbar {
+    display: flex;
+    z-index: 10;
+    position: fixed; 
+    flex-direction: column; /* Align items vertically */
+    justify-content: flex-start; /* Align links at the top */
+    align-items: flex-end; /* Align links to the right */ /* Fix navbar to the side */
+    top: 50%; /* Center navbar vertically */
+    right: 0; /* Align navbar to the right side */
+    transform: translateY(-50%); /* Adjust to perfectly center the navbar vertically */
+    padding: 10px 20px; /* Optional padding */
+    background: linear-gradient(to right, #505ecd, #2f6e73);/* Optional background */
+    width: 20px; /* Make the navbar half the length of the window */
+    border-radius: 25px; /* Round the corners of the navbar */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional shadow for the navbar */
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease; /* Smooth transition */
+    opacity: 0.9; /* Slightly transparent */
+  }
+  
+  .navbar:hover {
+    transform: translateX(10px) translateY(-50%); /* Slight move to the right on hover */
+    opacity: 1; /* Full opacity on hover */
+  }
+  
+  .navbar ul {
+    display: flex;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    flex-direction: column; /* Arrange list items vertically */
+    width: 100%;
+  }
+  
+  .navbar li {
+    margin-bottom: 15px; /* Space between each link */
+    transition: transform 0.3s ease, color 0.3s ease; /* Smooth hover effect on items */
+  }
+  
+  .navbar li:hover {
+    transform: scale(1.1); /* Slight scale effect on hover */
+  }
+  
+  .navbar a {
+    text-decoration: none;
+    color: #333; /* Default link color */
+    font-size: 18px; /* Font size */
+    transition: color 0.3s ease, transform 0.3s ease; /* Smooth transition */
+  }
+  
+  .navbar a:hover {
+    color: #007BFF; /* Link color on hover */
+    transform: translateY(-2px); /* Slight upward movement on hover */
+  }
+  
+  .navbar li:last-child a {
+    color: #e74c3c; /* Specific color for logout */
+  }
+  
+  .navbar li:last-child a:hover {
+    color: #c0392b; /* Darker color for logout on hover */
+  }
+  

@@ -1,0 +1,62 @@
+.navbar2 {
+    display: flex;
+    z-index: 10;
+    position: fixed; /* Fix navbar at the top */
+    flex-direction: row; /* Align items horizontally */
+    justify-content: space-between; /* Space out the items evenly */
+    align-items: center; /* Align items vertically in the center */
+    padding: 10px 20px; /* Optional padding */
+    width: 300px; /* Width of the navbar */
+    text-align: center;
+    background: linear-gradient(to right, #505ecd, #2f6e73); /* Optional background */
+    border-radius: 25px; /* Round the corners of the navbar */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional shadow for the navbar */
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease; /* Smooth transition */
+    opacity: 0.9; /* Slightly transparent */
+    left: 50%; /* Position the navbar at the horizontal center */
+}
+
+  
+  .navbar2:hover {
+    transform: translateY(-5px); /* Slight move upwards on hover */
+    opacity: 1; /* Full opacity on hover */
+  }
+  
+  .navbar2 ul {
+    display: flex;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    justify-content: space-between; /* Space out the items evenly */
+    width: 100%; /* Full width for the list */
+  }
+  
+  .navbar2 li {
+    margin-left: 15px; /* Space between each link */
+    transition: transform 0.3s ease, color 0.3s ease; /* Smooth hover effect on items */
+  }
+  
+  .navbar2 li:hover {
+    transform: scale(1.1); /* Slight scale effect on hover */
+  }
+  
+  .navbar2 a {
+    text-decoration: none;
+    color: #333; /* Default link color */
+    font-size: 18px; /* Font size */
+    transition: color 0.3s ease, transform 0.3s ease; /* Smooth transition */
+  }
+  
+  .navbar2 a:hover {
+    color: #007BFF; /* Link color on hover */
+    transform: translateY(-2px); /* Slight upward movement on hover */
+  }
+  
+  .navbar2 li:last-child a {
+    color: #e74c3c; /* Specific color for logout */
+  }
+  
+  .navbar2 li:last-child a:hover {
+    color: #c0392b; /* Darker color for logout on hover */
+  }
+  

@@ -20,7 +20,7 @@ body {
     position: relative;
     top: -30px;
  }
- h1 {
+ h1,h2,h3 {
     color: #11193e; 
     background-image: linear-gradient(45deg, #11193e 26%, #2a347a 60%, #d05d70 48%); 
     background-clip: text; 
@@ -66,3 +66,10 @@ body {
   height: 150px;
   object-fit: cover;
    }
+
+
+input{
+  border-radius: 30px;
+  padding: 10px;
+  margin: 10px;
+}

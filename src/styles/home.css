@@ -1,0 +1,54 @@
+h2{
+    font-size: 25px;
+}
+
+h3{
+    font-size: 15px;
+}
+
+
+.home-container {
+    display: flex;
+    flex-direction: column;  /* Stack the rows vertically */
+    gap: 20px;  /* Space between rows */
+    padding: 20px;
+  }
+  
+  .flex-row {
+    display: flex;
+    justify-content: space-evenly; /* Space between boxes in a row */
+  }
+  
+  .flex-box1,.flex-box2 {
+    background-color: #f0f0f0;
+    border-radius: 8px;
+    padding: 20px;
+    width: 30%;
+    margin: 0;  /* Ensure the boxes take up roughly half the width of the row */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    flex-direction: column;  /* Stack the elements vertically */
+    justify-content: flex-start;  /* Align content to the top */
+    align-items: flex-start; 
+    font-size: 18px;
+    height: 150px;
+  }
+  
+  .flex-box1 h3, .flex-box2 h3, .flex-box3 h3, .flex-box4 h3 {
+    margin: 0;  /* Remove default margin from h3 */
+  }
+  
+  .flex-box3, .flex-box4 {
+    background-color: #f0f0f0;
+    border-radius: 8px;
+    padding: 20px;
+    width: 30%;
+    margin: 0;  /* Ensure the boxes take up roughly half the width of the row */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    flex-direction: column;  /* Stack the elements vertically */
+    justify-content: flex-start;  /* Align content to the top */
+    align-items: flex-start; 
+    font-size: 18px;
+    height: 50px;
+  }
