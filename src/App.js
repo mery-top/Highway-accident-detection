@@ -4,6 +4,7 @@ import Login from "./components/Login";
 import Home from "./pages/Home";
 import Navbar from "./components/Navbar";
 import Photos from "./pages/Photos";
+// uvicorn main:app --reload
 
 
 
