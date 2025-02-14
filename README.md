@@ -1,2 +1,2 @@
 Highway Accident Detection IOT
-Frontend is present at the Master Branch
+Frontend is present at the Master Branch.
