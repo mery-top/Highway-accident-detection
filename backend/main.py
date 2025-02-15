@@ -6,7 +6,7 @@ from fastapi_jwt_auth import AuthJWT
 import bcrypt
 import os
 from dotenv import load_dotenv
-
+# uvicorn main:app --reload
 
 load_dotenv()
 
