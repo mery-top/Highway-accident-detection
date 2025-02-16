@@ -5,6 +5,8 @@ from pydantic import BaseModel
 from fastapi_jwt_auth import AuthJWT
 import bcrypt
 import os
+import serial
+import threading
 from dotenv import load_dotenv
 # uvicorn main:app --reload
 
@@ -34,6 +36,43 @@ def get_config():
 STORED_PASSWORD_HASH = os.getenv("HASH_VALUE")
 class LoginRequest(BaseModel):
     password: str
+
+
+
+accident_data = {"status": "No accident detected", "latitude": None, "longitude": None, "magnitude": 0.0}
+
+# Open serial connection (change COM3 to your Arduino port, e.g., /dev/ttyUSB0 for Linux)
+ser = serial.Serial('/dev/cu.wchusbserial1140', 9600, timeout=1)
+
+def read_serial():
+    global accident_data
+    while True:
+        try:
+            line = ser.readline().decode('utf-8').strip()
+            if line.startswith("Magnitude:"):
+                magnitude = float(line.split(":")[1].strip())
+                accident_data["magnitude"] = magnitude
+
+            if line.startswith("ACCIDENT:"):
+                lat, lng = line.split(":")[1].split(",")
+                accident_data["status"] = "Accident detected!"
+                accident_data["latitude"] = float(lat)
+                accident_data["longitude"] = float(lng)
+                print("Accident Data Updated:", accident_data)
+
+        except Exception as e:
+            print("Error reading serial:", e)
+
+# Run Serial Reading in a Background Thread
+serial_thread = threading.Thread(target=read_serial, daemon=True)
+serial_thread.start()
+
+@app.get("/accident_status")
+def get_accident_status():
+    return accident_data
+
+
+
 
 @app.post("/login")
 def login(data: LoginRequest, Authorize: AuthJWT = Depends()):
