@@ -6,6 +6,8 @@ from fastapi_jwt_auth import AuthJWT
 import bcrypt
 import os
 import serial
+from twilio.rest import Client
+from fastapi.responses import JSONResponse
 import threading
 from dotenv import load_dotenv
 # uvicorn main:app --reload
@@ -23,6 +25,16 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+
+TWILIO_PHONE_NUMBER = "+15402534583"  # Replace with your Twilio number
+TWILIO_ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID")  # Replace with your Twilio Account SID
+TWILIO_AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN")  # Replace with your Twilio Auth Token
+
+# Initialize Twilio client
+client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
+
 
 class Settings(BaseModel):
     authjwt_secret_key: str = os.getenv("JWT_KEY")
@@ -130,6 +142,50 @@ def home(Authorize: AuthJWT = Depends()):
         return {"message": "Welcome to the home page!"}
     except Exception as e:
         raise HTTPException(status_code=401, detail="Unauthorized")
+
+
+
+
+# Pydantic model for accident data
+class AccidentData(BaseModel):
+    latitude: float
+    longitude: float
+    magnitude: float
+    phone_number: str
+    
+@app.post("/send-accident-alert")
+def send_accident_alert():
+    data = request.json
+
+    if not data.get("phone_number") or not data.get("magnitude"):
+        return jsonify({"error": "Missing required fields: phone_number or magnitude"}), 400
+
+    phone_number = data["phone_number"]
+    latitude = data.get("latitude", "Unknown")
+    longitude = data.get("longitude", "Unknown")
+    magnitude = data["magnitude"]
+
+    # Send SMS using Twilio
+    try:
+        # Send an SMS alert
+        message = client.messages.create(
+            body=f"Accident detected! Magnitude: {magnitude}. Location: {latitude}, {longitude}.",
+            from_=TWILIO_PHONE_NUMBER,
+            to=phone_number,
+        )
+
+        # Optionally, you can add a phone call for more urgency
+        call = client.calls.create(
+            twiml=f'<Response><Say voice="alice">Urgent! Accident detected! Magnitude {magnitude} at {latitude}, {longitude}. Please take action immediately.</Say></Response>',
+            from_=TWILIO_PHONE_NUMBER,
+            to=phone_number,
+        )
+
+        return jsonify({"message": "Accident alert sent successfully!"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
 
 if __name__ == "__main__":
     import uvicorn
