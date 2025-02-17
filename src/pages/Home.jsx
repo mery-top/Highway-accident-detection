@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import "../styles/home.css";
+import LocationComponent from "../components/LocationComponent";
 import { Line } from "react-chartjs-2"; // Import the Line chart component from Chart.js
 import { Chart as ChartJS, Title, Tooltip, Legend, PointElement, LineElement, CategoryScale, LinearScale } from 'chart.js';
 ChartJS.register(Title, Tooltip, Legend, PointElement, LineElement, CategoryScale, LinearScale);
@@ -113,8 +114,7 @@ function PatientInfo() {
         <div className="flex-row">
         <div className="flex-box2">
             <h3>Location and Severity</h3>
-            <p>Latitude: {data.latitude || "N/A"}</p>
-            <p>Longitude: {data.longitude || "N/A"}</p>
+            <p><LocationComponent/></p>
             <p>Check: {data.magnitude}</p>
             <p>{frozenMagnitude !== null ? `Impact Magnitude: ${frozenMagnitude}` : ""}</p>
           </div>

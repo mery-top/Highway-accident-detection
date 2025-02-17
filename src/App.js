@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes, Navigate,  useLocation } from "
 import Login from "./components/Login";
 import Home from "./pages/Home";
 import Navbar from "./components/Navbar";
-import Photos from "./pages/Photos";
+import Photos from "./pages/MapPage";
 // uvicorn main:app --reload
 
 
