@@ -37,28 +37,55 @@ STORED_PASSWORD_HASH = os.getenv("HASH_VALUE")
 class LoginRequest(BaseModel):
     password: str
 
+# Store accident data
+accident_data = {
+    "status": "No accident detected",
+    "latitude": None,
+    "longitude": None,
+    "magnitude": 0.0,
+    "heartbeat": 0,
+    "temperature": 0.0
+}
 
-
-accident_data = {"status": "No accident detected", "latitude": None, "longitude": None, "magnitude": 0.0}
-
-# Open serial connection (change COM3 to your Arduino port, e.g., /dev/ttyUSB0 for Linux)
+# Open serial connection (Update the port as per your system)
 ser = serial.Serial('/dev/cu.wchusbserial1140', 9600, timeout=1)
 
 def read_serial():
+    """ Reads data from the Arduino serial port and updates accident_data. """
     global accident_data
     while True:
         try:
             line = ser.readline().decode('utf-8').strip()
+            
             if line.startswith("Magnitude:"):
                 magnitude = float(line.split(":")[1].strip())
                 accident_data["magnitude"] = magnitude
+            
+            elif line.startswith("Heartbeat:"):
+                heartbeat = int(line.split(":")[1].strip())
+                accident_data["heartbeat"] = heartbeat
+            
+            elif line.startswith("Temperature:"):
+                temperature = float(line.split(":")[1].strip())
+                accident_data["temperature"] = temperature
 
-            if line.startswith("ACCIDENT:"):
+            elif line.startswith("ACCIDENT:"):
                 lat, lng = line.split(":")[1].split(",")
                 accident_data["status"] = "Accident detected!"
                 accident_data["latitude"] = float(lat)
                 accident_data["longitude"] = float(lng)
                 print("Accident Data Updated:", accident_data)
+
+            elif line.startswith("DATA:"):
+                lat, lng, heartbeat, temperature = line.split(":")[1].split(",")
+                accident_data.update({
+                    "status": "Accident detected!",
+                    "latitude": float(lat),
+                    "longitude": float(lng),
+                    "heartbeat": int(heartbeat),
+                    "temperature": float(temperature),
+                })
+                print("Updated Data:", accident_data)
 
         except Exception as e:
             print("Error reading serial:", e)
@@ -67,11 +94,10 @@ def read_serial():
 serial_thread = threading.Thread(target=read_serial, daemon=True)
 serial_thread.start()
 
-@app.get("/accident_status")
-def get_accident_status():
+@app.get("/accident-data")
+def get_accident_data():
+    """ API endpoint to fetch accident data """
     return accident_data
-
-
 
 
 @app.post("/login")
