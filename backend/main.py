@@ -146,44 +146,6 @@ def home(Authorize: AuthJWT = Depends()):
 
 
 
-# Pydantic model for accident data
-class AccidentData(BaseModel):
-    latitude: float
-    longitude: float
-    magnitude: float
-    phone_number: str
-    
-@app.post("/send-accident-alert")
-def send_accident_alert():
-    data = request.json
-
-    if not data.get("phone_number") or not data.get("magnitude"):
-        return jsonify({"error": "Missing required fields: phone_number or magnitude"}), 400
-
-    phone_number = data["phone_number"]
-    latitude = data.get("latitude", "Unknown")
-    longitude = data.get("longitude", "Unknown")
-    magnitude = data["magnitude"]
-
-    # Send SMS using Twilio
-    try:
-        # Send an SMS alert
-        message = client.messages.create(
-            body=f"Accident detected! Magnitude: {magnitude}. Location: {latitude}, {longitude}.",
-            from_=TWILIO_PHONE_NUMBER,
-            to=phone_number,
-        )
-
-        # Optionally, you can add a phone call for more urgency
-        call = client.calls.create(
-            twiml=f'<Response><Say voice="alice">Urgent! Accident detected! Magnitude {magnitude} at {latitude}, {longitude}. Please take action immediately.</Say></Response>',
-            from_=TWILIO_PHONE_NUMBER,
-            to=phone_number,
-        )
-
-        return jsonify({"message": "Accident alert sent successfully!"}), 200
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
 
 
 
