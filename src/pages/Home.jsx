@@ -51,74 +51,66 @@ function PatientInfo() {
 
     fetchLocation();
   }, []);
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch("http://127.0.0.1:8000/accident-data");
-        const result = await response.json();
-  
-        // Set frozen magnitude on first accident detection with magnitude > 1
-        if (frozenMagnitude === null && result.magnitude > 1) {
-          setFrozenMagnitude(result.magnitude); 
-          console.log("Frozen magnitude set to: ", result.magnitude);
-        }
-  
-        // Maintain frozen magnitude or update based on result
-        setData((prevData) => ({
-          ...prevData,
-          ...result,
-          magnitude: frozenMagnitude !== null ? frozenMagnitude : result.magnitude,
-        }));
-  
-        console.log("Updated data: ", result);
-        
-        // Trigger alert only when accident is detected and magnitude is frozen
-        if (result.status === "Accident detected" && frozenMagnitude !== null) {
-          console.log("Sending accident alert with frozen magnitude: ", frozenMagnitude);
-          sendAccidentAlert();
-        }
-  
-      } catch (error) {
-        console.error("Error fetching data:", error);
+
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const response = await fetch("http://127.0.0.1:8000/accident-data");
+      const result = await response.json();
+
+      // Set frozen magnitude on first accident detection with magnitude > 1
+      if (frozenMagnitude === null && result.magnitude > 1) {
+        setFrozenMagnitude(result.magnitude); 
+        console.log("Frozen magnitude set to:", result.magnitude);
+
+        // Trigger alert when frozenMagnitude is set
+        sendEmergencyAlert(result);
       }
-    };
-  
-    fetchData();
-  
-    // Poll data every 3 seconds
-    const interval = setInterval(fetchData, 3000);
-    return () => clearInterval(interval);
-  }, [frozenMagnitude]);  // Ensure this effect depends on frozenMagnitude
-  
-  const sendAccidentAlert = async () => {
-    if (data.status === "Accident detected" && frozenMagnitude !== null) {
-      const accidentData = {
-        latitude: data.latitude,
-        longitude: data.longitude,
-        magnitude: frozenMagnitude,
-        phone_number: "+9190", // Replace with actual recipient phone number
-      };
-  
-      try {
-        const response = await fetch("http://127.0.0.1:8000/send-accident-alert", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(accidentData),
-        });
-  
-        const result = await response.json();
-        if (response.ok) {
-          console.log("Accident alert sent successfully:", result);
-        } else {
-          console.error("Failed to send accident alert:", result);
-        }
-      } catch (error) {
-        console.error("Error in sending accident alert:", error);
-      }
+
+      // Maintain frozen magnitude or update based on result
+      setData((prevData) => ({
+        ...prevData,
+        ...result,
+        magnitude: frozenMagnitude !== null ? frozenMagnitude : result.magnitude,
+      }));
+
+      console.log("Updated data:", result);
+    } catch (error) {
+      console.error("Error fetching data:", error);
     }
   };
+
+  fetchData();
+
+  // Poll data every 3 seconds
+  const interval = setInterval(fetchData, 3000);
+  return () => clearInterval(interval);
+}, [frozenMagnitude]);
+
+// Function to send an alert to the backend for Twilio SMS & Call
+const sendEmergencyAlert = async (accidentData) => {
+  try {
+    const response = await fetch("http://127.0.0.1:8000/send-alert", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        message: `Accident detected at Lat: ${accidentData.latitude}, Long: ${accidentData.longitude}. Impact Magnitude: ${accidentData.magnitude}.`,
+        phone_number: "+1234567890", // Replace with recipient number
+      }),
+    });
+
+    if (response.ok) {
+      console.log("Emergency alert sent!");
+    } else {
+      console.error("Failed to send emergency alert.");
+    }
+  } catch (error) {
+    console.error("Error sending alert:", error);
+  }
+};
+
   
 
   const errorFactor = 263 / 100;
