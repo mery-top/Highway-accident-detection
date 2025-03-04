@@ -28,9 +28,10 @@ app.add_middleware(
 
 
 
-TWILIO_PHONE_NUMBER = "+15402534583"  # Replace with your Twilio number
-TWILIO_ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID")  # Replace with your Twilio Account SID
-TWILIO_AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN")  # Replace with your Twilio Auth Token
+TWILIO_ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID")
+TWILIO_AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN")
+TWILIO_PHONE_NUMBER = os.getenv("TWILIO_PHONE_NUMBER")  # Replace with your Twilio number
+TEST_PHONE_NUMBER =os.getenv("TEST_PHONE_NUMBER")  # Replace with your Twilio Auth Token
 
 # Initialize Twilio client
 client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
@@ -83,10 +84,13 @@ def read_serial():
 
             elif line.startswith("ACCIDENT:"):
                 lat, lng = line.split(":")[1].split(",")
-                accident_data["status"] = "Accident detected!"
-                accident_data["latitude"] = float(lat)
-                accident_data["longitude"] = float(lng)
-                print("Accident Data Updated:", accident_data)
+                accident_data.update({
+                    "status": "Accident detected!",
+                    "latitude": float(lat),
+                    "longitude": float(lng)
+                })
+                print("🚨 Accident Detected! Sending alert...")
+                send_alert()  # Send Twilio alert
 
             elif line.startswith("DATA:"):
                 lat, lng, heartbeat, temperature = line.split(":")[1].split(",")
@@ -97,7 +101,8 @@ def read_serial():
                     "heartbeat": int(heartbeat),
                     "temperature": float(temperature),
                 })
-                print("Updated Data:", accident_data)
+                print("🚨 Accident Detected! Sending alert...")
+                send_alert()  # Send Twilio alert
 
         except Exception as e:
             print("Error reading serial:", e)
@@ -106,6 +111,34 @@ def read_serial():
 serial_thread = threading.Thread(target=read_serial, daemon=True)
 serial_thread.start()
 
+class AlertData(BaseModel):
+    message: str
+    phone_number: str
+
+@app.post("/send-alert")
+def send_alert(data: AlertData):
+    try:
+        # Send SMS
+        message = client.messages.create(
+            body=data.message,
+            from_=TWILIO_PHONE_NUMBER,
+            to=data.phone_number
+        )
+        print("SMS sent:", message.sid)
+
+        # Make a call
+        call = client.calls.create(
+            twiml=f'<Response><Say>{data.message}</Say></Response>',
+            from_=TWILIO_PHONE_NUMBER,
+            to=data.phone_number
+        )
+        print("Call initiated:", call.sid)
+
+        return {"status": "Alert sent successfully"}
+    
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
 @app.get("/accident-data")
 def get_accident_data():
     """ API endpoint to fetch accident data """
